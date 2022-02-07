@@ -34,8 +34,29 @@ func (m *maxheap) insert(item *HeapElement) {
 	if _, ok := m.values[item.value]; ok {
 		for i := 0; i < len(m.heapArray); i++ {
 			if m.heapArray[i].value == item.value {
-				m.heapArray[i] = *item
-				m.upHeapify(i)
+				m.heapArray[i].index = item.index
+				if m.size == 5 {
+					var ha = make([]HeapElement, m.size)
+					ha[0] = m.heapArray[i]
+					for j := 0; j < len(m.heapArray); j++ {
+						if j != i {
+							if j < i {
+								ha[j+1] = m.heapArray[j]
+							} else {
+								ha[j] = m.heapArray[j]
+							}
+						}
+					}
+					m.heapArray = ha
+					//m.heapArray[0], m.heapArray[1], m.heapArray[2], m.heapArray[3], m.heapArray[4] = ha[1], ha[2], ha[3], ha[4], ha[0]
+					i = 0
+					for m.heapArray[i].index < m.heapArray[i+1].index {
+						m.swap(i, i+1)
+						i++
+					}
+				} else {
+					m.upHeapify(i)
+				}
 				return
 			}
 		}
